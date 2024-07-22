@@ -229,7 +229,7 @@ class _PhotoViewGalleryState extends State<PhotoViewGallery> {
 /// The [maxScale], [minScale] and [initialScale] options may be [double] or a [PhotoViewComputedScale] constant
 ///
 class PhotoViewGalleryPageOptions {
-  PhotoViewGalleryPageOptions.customChild({
+  PhotoViewGalleryPageOptions({
     required this.child,
     this.childWrapper,
     this.semanticLabel,
