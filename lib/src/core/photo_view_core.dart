@@ -344,20 +344,16 @@ class PhotoViewCoreState extends State<PhotoViewCore>
   }
 
   Widget _buildHero() {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      child: heroAttributes != null
-          ? Hero(
-              tag: heroAttributes!.tag,
-              createRectTween: heroAttributes!.createRectTween,
-              flightShuttleBuilder: heroAttributes!.flightShuttleBuilder,
-              placeholderBuilder: heroAttributes!.placeholderBuilder,
-              transitionOnUserGestures:
-                  heroAttributes!.transitionOnUserGestures,
-              child: widget.customChild,
-            )
-          : widget.customChild,
-    );
+    return heroAttributes != null
+        ? Hero(
+            tag: heroAttributes!.tag,
+            createRectTween: heroAttributes!.createRectTween,
+            flightShuttleBuilder: heroAttributes!.flightShuttleBuilder,
+            placeholderBuilder: heroAttributes!.placeholderBuilder,
+            transitionOnUserGestures: heroAttributes!.transitionOnUserGestures,
+            child: widget.customChild,
+          )
+        : widget.customChild;
   }
 }
 
