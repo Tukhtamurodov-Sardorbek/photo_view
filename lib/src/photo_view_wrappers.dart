@@ -216,8 +216,8 @@ class _ImageWrapperState extends State<ImageWrapper> {
   }
 
   Widget _buildError(
-      BuildContext context,
-      ) {
+    BuildContext context,
+  ) {
     if (widget.errorBuilder != null) {
       return widget.errorBuilder!(context, _lastException!, _lastStack);
     }

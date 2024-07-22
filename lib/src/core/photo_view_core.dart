@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:photo_view/photo_view.dart'
     show
-    PhotoViewScaleState,
-    PhotoViewHeroAttributes,
-    PhotoViewImageTapDownCallback,
-    PhotoViewImageTapUpCallback,
-    PhotoViewImageScaleEndCallback,
-    ScaleStateCycle;
+        PhotoViewScaleState,
+        PhotoViewHeroAttributes,
+        PhotoViewImageTapDownCallback,
+        PhotoViewImageTapUpCallback,
+        PhotoViewImageScaleEndCallback,
+        ScaleStateCycle;
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:photo_view/src/controller/photo_view_controller.dart';
 import 'package:photo_view/src/controller/photo_view_controller_delegate.dart';
@@ -118,7 +118,7 @@ class PhotoViewCoreState extends State<PhotoViewCore>
   Animation<Offset>? _positionAnimation;
 
   late final AnimationController _rotationAnimationController =
-  AnimationController(vsync: this)..addListener(handleRotationAnimation);
+      AnimationController(vsync: this)..addListener(handleRotationAnimation);
   Animation<double>? _rotationAnimation;
 
   PhotoViewHeroAttributes? get heroAttributes => widget.heroAttributes;
@@ -164,7 +164,7 @@ class PhotoViewCoreState extends State<PhotoViewCore>
           ? delta
           : clampPosition(position: delta * details.scale),
       rotation:
-      widget.enableRotation ? _rotationBefore! + details.rotation : null,
+          widget.enableRotation ? _rotationBefore! + details.rotation : null,
       rotationFocusPoint: widget.enableRotation ? details.focalPoint : null,
     );
   }
@@ -309,9 +309,9 @@ class PhotoViewCoreState extends State<PhotoViewCore>
         stream: controller.outputStateStream,
         initialData: controller.prevValue,
         builder: (
-            BuildContext context,
-            AsyncSnapshot<PhotoViewControllerValue> snapshot,
-            ) {
+          BuildContext context,
+          AsyncSnapshot<PhotoViewControllerValue> snapshot,
+        ) {
           if (snapshot.hasData) {
             final PhotoViewControllerValue value = snapshot.data!;
             final useImageScale = widget.filterQuality != FilterQuality.none;
@@ -379,13 +379,13 @@ class PhotoViewCoreState extends State<PhotoViewCore>
   Widget _buildHero() {
     return heroAttributes != null
         ? Hero(
-      tag: heroAttributes!.tag,
-      createRectTween: heroAttributes!.createRectTween,
-      flightShuttleBuilder: heroAttributes!.flightShuttleBuilder,
-      placeholderBuilder: heroAttributes!.placeholderBuilder,
-      transitionOnUserGestures: heroAttributes!.transitionOnUserGestures,
-      child: _buildChild(),
-    )
+            tag: heroAttributes!.tag,
+            createRectTween: heroAttributes!.createRectTween,
+            flightShuttleBuilder: heroAttributes!.flightShuttleBuilder,
+            placeholderBuilder: heroAttributes!.placeholderBuilder,
+            transitionOnUserGestures: heroAttributes!.transitionOnUserGestures,
+            child: _buildChild(),
+          )
         : _buildChild();
   }
 
@@ -393,22 +393,22 @@ class PhotoViewCoreState extends State<PhotoViewCore>
     return widget.hasCustomChild
         ? widget.customChild!
         : Image(
-      image: widget.imageProvider!,
-      semanticLabel: widget.semanticLabel,
-      gaplessPlayback: widget.gaplessPlayback ?? false,
-      filterQuality: widget.filterQuality,
-      width: scaleBoundaries.childSize.width * scale,
-      fit: BoxFit.contain,
-    );
+            image: widget.imageProvider!,
+            semanticLabel: widget.semanticLabel,
+            gaplessPlayback: widget.gaplessPlayback ?? false,
+            filterQuality: widget.filterQuality,
+            width: scaleBoundaries.childSize.width * scale,
+            fit: BoxFit.contain,
+          );
   }
 }
 
 class _CenterWithOriginalSizeDelegate extends SingleChildLayoutDelegate {
   const _CenterWithOriginalSizeDelegate(
-      this.subjectSize,
-      this.basePosition,
-      this.useImageScale,
-      );
+    this.subjectSize,
+    this.basePosition,
+    this.useImageScale,
+  );
 
   final Size subjectSize;
   final Alignment basePosition;
@@ -442,11 +442,11 @@ class _CenterWithOriginalSizeDelegate extends SingleChildLayoutDelegate {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is _CenterWithOriginalSizeDelegate &&
-              runtimeType == other.runtimeType &&
-              subjectSize == other.subjectSize &&
-              basePosition == other.basePosition &&
-              useImageScale == other.useImageScale;
+      other is _CenterWithOriginalSizeDelegate &&
+          runtimeType == other.runtimeType &&
+          subjectSize == other.subjectSize &&
+          basePosition == other.basePosition &&
+          useImageScale == other.useImageScale;
 
   @override
   int get hashCode =>
