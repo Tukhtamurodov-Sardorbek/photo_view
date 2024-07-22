@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_view/photo_view.dart'
     show
-        LoadingBuilder,
         PhotoView,
         PhotoViewImageTapDownCallback,
         PhotoViewImageTapUpCallback,
@@ -34,87 +33,11 @@ class PhotoViewGalleryWrapperData {
   final int index;
 }
 
-/// A [StatefulWidget] that shows multiple [PhotoView] widgets in a [PageView]
-///
-/// Some of [PhotoView] constructor options are passed direct to [PhotoViewGallery] constructor. Those options will affect the gallery in a whole.
-///
-/// Some of the options may be defined to each image individually, such as `initialScale` or `PhotoViewHeroAttributes`. Those must be passed via each [PhotoViewGalleryPageOptions].
-///
-/// Example of usage as a list of options:
-/// ```
-/// PhotoViewGallery(
-///   pageOptions: <PhotoViewGalleryPageOptions>[
-///     PhotoViewGalleryPageOptions(
-///       imageProvider: AssetImage("assets/gallery1.jpg"),
-///       heroAttributes: const PhotoViewHeroAttributes(tag: "tag1"),
-///     ),
-///     PhotoViewGalleryPageOptions(
-///       imageProvider: AssetImage("assets/gallery2.jpg"),
-///       heroAttributes: const PhotoViewHeroAttributes(tag: "tag2"),
-///       maxScale: PhotoViewComputedScale.contained * 0.3
-///     ),
-///     PhotoViewGalleryPageOptions(
-///       imageProvider: AssetImage("assets/gallery3.jpg"),
-///       minScale: PhotoViewComputedScale.contained * 0.8,
-///       maxScale: PhotoViewComputedScale.covered * 1.1,
-///       heroAttributes: const HeroAttributes(tag: "tag3"),
-///     ),
-///   ],
-///   loadingBuilder: (context, progress) => Center(
-///            child: Container(
-///              width: 20.0,
-///              height: 20.0,
-///              child: CircularProgressIndicator(
-///                value: _progress == null
-///                    ? null
-///                    : _progress.cumulativeBytesLoaded /
-///                        _progress.expectedTotalBytes,
-///              ),
-///            ),
-///          ),
-///   backgroundDecoration: widget.backgroundDecoration,
-///   pageController: widget.pageController,
-///   onPageChanged: onPageChanged,
-/// )
-/// ```
-///
-/// Example of usage with builder pattern:
-/// ```
-/// PhotoViewGallery.builder(
-///   scrollPhysics: const BouncingScrollPhysics(),
-///   builder: (BuildContext context, int index) {
-///     return PhotoViewGalleryPageOptions(
-///       imageProvider: AssetImage(widget.galleryItems[index].image),
-///       initialScale: PhotoViewComputedScale.contained * 0.8,
-///       minScale: PhotoViewComputedScale.contained * 0.8,
-///       maxScale: PhotoViewComputedScale.covered * 1.1,
-///       heroAttributes: HeroAttributes(tag: galleryItems[index].id),
-///     );
-///   },
-///   itemCount: galleryItems.length,
-///   loadingBuilder: (context, progress) => Center(
-///            child: Container(
-///              width: 20.0,
-///              height: 20.0,
-///              child: CircularProgressIndicator(
-///                value: _progress == null
-///                    ? null
-///                    : _progress.cumulativeBytesLoaded /
-///                        _progress.expectedTotalBytes,
-///              ),
-///            ),
-///          ),
-///   backgroundDecoration: widget.backgroundDecoration,
-///   pageController: widget.pageController,
-///   onPageChanged: onPageChanged,
-/// )
-/// ```
 class PhotoViewGallery extends StatefulWidget {
   /// Construct a gallery with static items through a list of [PhotoViewGalleryPageOptions].
   const PhotoViewGallery({
     Key? key,
     required this.pageOptions,
-    this.loadingBuilder,
     this.wantKeepAlive = false,
     this.gaplessPlayback = false,
     this.reverse = false,
@@ -138,7 +61,6 @@ class PhotoViewGallery extends StatefulWidget {
     Key? key,
     required this.itemCount,
     required this.builder,
-    this.loadingBuilder,
     this.wantKeepAlive = false,
     this.gaplessPlayback = false,
     this.reverse = false,
@@ -167,9 +89,6 @@ class PhotoViewGallery extends StatefulWidget {
 
   /// [ScrollPhysics] for the internal [PageView]
   final ScrollPhysics? scrollPhysics;
-
-  /// Mirror to [PhotoView.loadingBuilder]
-  final LoadingBuilder? loadingBuilder;
 
   /// Mirror to [PhotoView.wantKeepAlive]
   final bool wantKeepAlive;
@@ -254,64 +173,33 @@ class _PhotoViewGalleryState extends State<PhotoViewGallery> {
   Widget _buildItem(BuildContext context, int index) {
     final pageOption = _buildPageOption(context, index);
     final wrapper = _getWrapper(context, index);
-    final isCustomChild = pageOption.child != null;
-
-    final PhotoView photoView = isCustomChild
-        ? PhotoView.customChild(
-            key: ObjectKey(index),
-            child: pageOption.child,
-            childWrapper: wrapper,
-            childSize: pageOption.childSize,
-            wantKeepAlive: widget.wantKeepAlive,
-            controller: pageOption.controller,
-            scaleStateController: pageOption.scaleStateController,
-            customSize: widget.customSize,
-            heroAttributes: pageOption.heroAttributes,
-            scaleStateChangedCallback: scaleStateChangedCallback,
-            enableRotation: widget.enableRotation,
-            initialScale: pageOption.initialScale,
-            minScale: pageOption.minScale,
-            maxScale: pageOption.maxScale,
-            scaleStateCycle: pageOption.scaleStateCycle,
-            onTapUp: pageOption.onTapUp,
-            onTapDown: pageOption.onTapDown,
-            onScaleEnd: pageOption.onScaleEnd,
-            gestureDetectorBehavior: pageOption.gestureDetectorBehavior,
-            tightMode: pageOption.tightMode,
-            filterQuality: pageOption.filterQuality,
-            basePosition: pageOption.basePosition,
-            disableGestures: pageOption.disableGestures,
-          )
-        : PhotoView(
-            key: ObjectKey(index),
-            imageProvider: pageOption.imageProvider,
-            loadingBuilder: widget.loadingBuilder,
-            wantKeepAlive: widget.wantKeepAlive,
-            controller: pageOption.controller,
-            scaleStateController: pageOption.scaleStateController,
-            customSize: widget.customSize,
-            semanticLabel: pageOption.semanticLabel,
-            gaplessPlayback: widget.gaplessPlayback,
-            heroAttributes: pageOption.heroAttributes,
-            scaleStateChangedCallback: scaleStateChangedCallback,
-            enableRotation: widget.enableRotation,
-            initialScale: pageOption.initialScale,
-            minScale: pageOption.minScale,
-            maxScale: pageOption.maxScale,
-            scaleStateCycle: pageOption.scaleStateCycle,
-            onTapUp: pageOption.onTapUp,
-            onTapDown: pageOption.onTapDown,
-            onScaleEnd: pageOption.onScaleEnd,
-            gestureDetectorBehavior: pageOption.gestureDetectorBehavior,
-            tightMode: pageOption.tightMode,
-            filterQuality: pageOption.filterQuality,
-            basePosition: pageOption.basePosition,
-            disableGestures: pageOption.disableGestures,
-            errorBuilder: pageOption.errorBuilder,
-          );
 
     return ClipRect(
-      child: photoView,
+      child: PhotoView(
+        key: ObjectKey(index),
+        child: pageOption.child,
+        childWrapper: wrapper,
+        childSize: pageOption.childSize,
+        wantKeepAlive: widget.wantKeepAlive,
+        controller: pageOption.controller,
+        scaleStateController: pageOption.scaleStateController,
+        customSize: widget.customSize,
+        heroAttributes: pageOption.heroAttributes,
+        scaleStateChangedCallback: scaleStateChangedCallback,
+        enableRotation: widget.enableRotation,
+        initialScale: pageOption.initialScale,
+        minScale: pageOption.minScale,
+        maxScale: pageOption.maxScale,
+        scaleStateCycle: pageOption.scaleStateCycle,
+        onTapUp: pageOption.onTapUp,
+        onTapDown: pageOption.onTapDown,
+        onScaleEnd: pageOption.onScaleEnd,
+        gestureDetectorBehavior: pageOption.gestureDetectorBehavior,
+        tightMode: pageOption.tightMode,
+        filterQuality: pageOption.filterQuality,
+        basePosition: pageOption.basePosition,
+        disableGestures: pageOption.disableGestures,
+      ),
     );
   }
 
@@ -341,31 +229,6 @@ class _PhotoViewGalleryState extends State<PhotoViewGallery> {
 /// The [maxScale], [minScale] and [initialScale] options may be [double] or a [PhotoViewComputedScale] constant
 ///
 class PhotoViewGalleryPageOptions {
-  PhotoViewGalleryPageOptions({
-    Key? key,
-    required this.imageProvider,
-    this.heroAttributes,
-    this.semanticLabel,
-    this.minScale,
-    this.maxScale,
-    this.initialScale,
-    this.controller,
-    this.scaleStateController,
-    this.basePosition,
-    this.scaleStateCycle,
-    this.onTapUp,
-    this.onTapDown,
-    this.onScaleEnd,
-    this.gestureDetectorBehavior,
-    this.tightMode,
-    this.filterQuality,
-    this.disableGestures,
-    this.errorBuilder,
-  })  : child = null,
-        childSize = null,
-        childWrapper = null,
-        assert(imageProvider != null);
-
   PhotoViewGalleryPageOptions.customChild({
     required this.child,
     this.childWrapper,
@@ -386,11 +249,7 @@ class PhotoViewGalleryPageOptions {
     this.tightMode,
     this.filterQuality,
     this.disableGestures,
-  })  : errorBuilder = null,
-        imageProvider = null;
-
-  /// Mirror to [PhotoView.imageProvider]
-  final ImageProvider? imageProvider;
+  });
 
   /// Mirror to [PhotoView.heroAttributes]
   final PhotoViewHeroAttributes? heroAttributes;
@@ -417,7 +276,7 @@ class PhotoViewGalleryPageOptions {
   final Alignment? basePosition;
 
   /// Mirror to [PhotoView.child]
-  final Widget? child;
+  final Widget child;
 
   final PhotoViewGalleryWrapperBuilder? childWrapper;
 
@@ -447,7 +306,4 @@ class PhotoViewGalleryPageOptions {
 
   /// Quality levels for image filters.
   final FilterQuality? filterQuality;
-
-  /// Mirror to [PhotoView.errorBuilder]
-  final ImageErrorWidgetBuilder? errorBuilder;
 }
