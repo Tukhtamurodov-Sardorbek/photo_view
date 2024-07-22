@@ -71,9 +71,6 @@ class _GalleryExampleState extends State<GalleryExample> {
       MaterialPageRoute(
         builder: (context) => GalleryPhotoViewWrapper(
           galleryItems: galleryItems,
-          backgroundDecoration: const BoxDecoration(
-            color: Colors.black,
-          ),
           initialIndex: index,
           scrollDirection: verticalGallery ? Axis.vertical : Axis.horizontal,
         ),
@@ -85,7 +82,6 @@ class _GalleryExampleState extends State<GalleryExample> {
 class GalleryPhotoViewWrapper extends StatefulWidget {
   GalleryPhotoViewWrapper({
     this.loadingBuilder,
-    this.backgroundDecoration,
     this.minScale,
     this.maxScale,
     this.initialIndex = 0,
@@ -94,7 +90,6 @@ class GalleryPhotoViewWrapper extends StatefulWidget {
   }) : pageController = PageController(initialPage: initialIndex);
 
   final LoadingBuilder? loadingBuilder;
-  final BoxDecoration? backgroundDecoration;
   final dynamic minScale;
   final dynamic maxScale;
   final int initialIndex;
@@ -121,7 +116,6 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: widget.backgroundDecoration,
         constraints: BoxConstraints.expand(
           height: MediaQuery.of(context).size.height,
         ),
@@ -133,7 +127,6 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
               builder: _buildItem,
               itemCount: widget.galleryItems.length,
               loadingBuilder: widget.loadingBuilder,
-              backgroundDecoration: widget.backgroundDecoration,
               pageController: widget.pageController,
               onPageChanged: onPageChanged,
               scrollDirection: widget.scrollDirection,
@@ -157,28 +150,34 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
     final GalleryExampleItem item = widget.galleryItems[index];
-    return item.isSvg
-        ? PhotoViewGalleryPageOptions.customChild(
-            child: Container(
-              width: 300,
-              height: 300,
-              child: SvgPicture.asset(
-                item.resource,
-                height: 200.0,
+    return PhotoViewGalleryPageOptions.customChild(
+        child: item.isSvg
+            ? SvgPicture.asset(item.resource)
+            : Image.asset(item.resource),
+        initialScale: PhotoViewComputedScale.contained,
+        minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
+        maxScale: PhotoViewComputedScale.covered * 4.1,
+        heroAttributes: PhotoViewHeroAttributes(tag: item.id),
+        childWrapper: (context, index, scalableChild) {
+          return Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: <Color>[Colors.white, Colors.black],
+                    stops: [0.1, 1.0],
+                  ),
+                ),
               ),
-            ),
-            childSize: const Size(300, 300),
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
-            maxScale: PhotoViewComputedScale.covered * 4.1,
-            heroAttributes: PhotoViewHeroAttributes(tag: item.id),
-          )
-        : PhotoViewGalleryPageOptions(
-            imageProvider: AssetImage(item.resource),
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
-            maxScale: PhotoViewComputedScale.covered * 4.1,
-            heroAttributes: PhotoViewHeroAttributes(tag: item.id),
+              Positioned(
+                left: 0,
+                right: 30,
+                top: 30,
+                bottom: 0,
+                child: scalableChild,
+              ),
+            ],
           );
+        });
   }
 }

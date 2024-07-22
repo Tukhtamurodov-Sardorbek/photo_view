@@ -5,7 +5,6 @@ class CommonExampleRouteWrapper extends StatelessWidget {
   const CommonExampleRouteWrapper({
     this.imageProvider,
     this.loadingBuilder,
-    this.backgroundDecoration,
     this.minScale,
     this.maxScale,
     this.initialScale,
@@ -17,7 +16,6 @@ class CommonExampleRouteWrapper extends StatelessWidget {
 
   final ImageProvider? imageProvider;
   final LoadingBuilder? loadingBuilder;
-  final BoxDecoration? backgroundDecoration;
   final dynamic minScale;
   final dynamic maxScale;
   final dynamic initialScale;
@@ -36,7 +34,6 @@ class CommonExampleRouteWrapper extends StatelessWidget {
         child: PhotoView(
           imageProvider: imageProvider,
           loadingBuilder: loadingBuilder,
-          backgroundDecoration: backgroundDecoration,
           minScale: minScale,
           maxScale: maxScale,
           initialScale: initialScale,

@@ -47,12 +47,6 @@ class CommonUseCasesExamples extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => const CommonExampleRouteWrapper(
                     imageProvider: const AssetImage("assets/small-image.jpg"),
-                    backgroundDecoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[Colors.white, Colors.grey],
-                        stops: [0.1, 1.0],
-                      ),
-                    ),
                   ),
                 ),
               );
@@ -66,9 +60,6 @@ class CommonUseCasesExamples extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => const CommonExampleRouteWrapper(
                     imageProvider: const AssetImage("assets/small-image.jpg"),
-                    backgroundDecoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
                     basePosition: Alignment(0.5, 0.0),
                   ),
                 ),

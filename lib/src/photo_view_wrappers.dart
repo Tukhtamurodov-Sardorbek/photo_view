@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 import '../photo_view.dart';
 import 'core/photo_view_core.dart';
@@ -10,7 +11,6 @@ class ImageWrapper extends StatefulWidget {
     Key? key,
     required this.imageProvider,
     required this.loadingBuilder,
-    required this.backgroundDecoration,
     required this.semanticLabel,
     required this.gaplessPlayback,
     required this.heroAttributes,
@@ -39,7 +39,6 @@ class ImageWrapper extends StatefulWidget {
   final ImageProvider imageProvider;
   final LoadingBuilder? loadingBuilder;
   final ImageErrorWidgetBuilder? errorBuilder;
-  final BoxDecoration backgroundDecoration;
   final String? semanticLabel;
   final bool gaplessPlayback;
   final PhotoViewHeroAttributes? heroAttributes;
@@ -185,7 +184,6 @@ class _ImageWrapperState extends State<ImageWrapper> {
 
     return PhotoViewCore(
       imageProvider: widget.imageProvider,
-      backgroundDecoration: widget.backgroundDecoration,
       semanticLabel: widget.semanticLabel,
       gaplessPlayback: widget.gaplessPlayback,
       enableRotation: widget.enableRotation,
@@ -218,14 +216,12 @@ class _ImageWrapperState extends State<ImageWrapper> {
   }
 
   Widget _buildError(
-    BuildContext context,
-  ) {
+      BuildContext context,
+      ) {
     if (widget.errorBuilder != null) {
       return widget.errorBuilder!(context, _lastException!, _lastStack);
     }
-    return PhotoViewDefaultError(
-      decoration: widget.backgroundDecoration,
-    );
+    return const PhotoViewDefaultError();
   }
 }
 
@@ -233,8 +229,8 @@ class CustomChildWrapper extends StatelessWidget {
   const CustomChildWrapper({
     Key? key,
     this.child,
+    this.childWrapper,
     required this.childSize,
-    required this.backgroundDecoration,
     this.heroAttributes,
     this.scaleStateChangedCallback,
     required this.enableRotation,
@@ -259,7 +255,7 @@ class CustomChildWrapper extends StatelessWidget {
 
   final Widget? child;
   final Size? childSize;
-  final Decoration backgroundDecoration;
+  final MapEntry<Widget Function(BuildContext, int, Widget), int>? childWrapper;
   final PhotoViewHeroAttributes? heroAttributes;
   final ValueChanged<PhotoViewScaleState>? scaleStateChangedCallback;
   final bool enableRotation;
@@ -296,7 +292,7 @@ class CustomChildWrapper extends StatelessWidget {
 
     return PhotoViewCore.customChild(
       customChild: child,
-      backgroundDecoration: backgroundDecoration,
+      childWrapper: childWrapper,
       enableRotation: enableRotation,
       heroAttributes: heroAttributes,
       controller: controller,

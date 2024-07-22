@@ -52,9 +52,6 @@ class NetworkExamples extends StatelessWidget {
                     imageProvider: const NetworkImage(
                       "https://pudim.com.br/sss.jpg",
                     ),
-                    backgroundDecoration: BoxDecoration(
-                      color: Color(0xffa1a1a1),
-                    ),
                   ),
                 ),
               );

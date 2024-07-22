@@ -1,6 +1,7 @@
 library photo_view;
 
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 import 'package:photo_view/src/controller/photo_view_controller.dart';
 import 'package:photo_view/src/controller/photo_view_scalestate_controller.dart';
@@ -238,7 +239,6 @@ class PhotoView extends StatefulWidget {
     Key? key,
     required this.imageProvider,
     this.loadingBuilder,
-    this.backgroundDecoration,
     this.wantKeepAlive = false,
     this.semanticLabel,
     this.gaplessPlayback = false,
@@ -265,6 +265,7 @@ class PhotoView extends StatefulWidget {
     this.strictScale,
   })  : child = null,
         childSize = null,
+        childWrapper = null,
         super(key: key);
 
   /// Creates a widget that displays a zoomable child.
@@ -276,8 +277,8 @@ class PhotoView extends StatefulWidget {
   PhotoView.customChild({
     Key? key,
     required this.child,
+    this.childWrapper,
     this.childSize,
-    this.backgroundDecoration,
     this.wantKeepAlive = false,
     this.heroAttributes,
     this.scaleStateChangedCallback,
@@ -317,9 +318,6 @@ class PhotoView extends StatefulWidget {
   /// Show loadFailedChild when the image failed to load
   final ImageErrorWidgetBuilder? errorBuilder;
 
-  /// Changes the background behind image, defaults to `Colors.black`.
-  final BoxDecoration? backgroundDecoration;
-
   /// This is used to keep the state of an image in the gallery (e.g. scale state).
   /// `false` -> resets the state (default)
   /// `true`  -> keeps the state
@@ -351,6 +349,8 @@ class PhotoView extends StatefulWidget {
 
   /// The specified custom child to be shown instead of a image
   final Widget? child;
+
+  final MapEntry<Widget Function(BuildContext, int, Widget), int>? childWrapper;
 
   /// The size of the custom [child]. [PhotoView] uses this value to compute the relation between the child and the container's size to calculate the scale value.
   final Size? childSize;
@@ -504,67 +504,64 @@ class _PhotoViewState extends State<PhotoView>
     super.build(context);
     return LayoutBuilder(
       builder: (
-        BuildContext context,
-        BoxConstraints constraints,
-      ) {
+          BuildContext context,
+          BoxConstraints constraints,
+          ) {
         final computedOuterSize = widget.customSize ?? constraints.biggest;
-        final backgroundDecoration = widget.backgroundDecoration ??
-            const BoxDecoration(color: Colors.black);
 
         return widget._isCustomChild
             ? CustomChildWrapper(
-                child: widget.child,
-                childSize: widget.childSize,
-                backgroundDecoration: backgroundDecoration,
-                heroAttributes: widget.heroAttributes,
-                scaleStateChangedCallback: widget.scaleStateChangedCallback,
-                enableRotation: widget.enableRotation,
-                controller: _controller,
-                scaleStateController: _scaleStateController,
-                maxScale: widget.maxScale,
-                minScale: widget.minScale,
-                initialScale: widget.initialScale,
-                basePosition: widget.basePosition,
-                scaleStateCycle: widget.scaleStateCycle,
-                onTapUp: widget.onTapUp,
-                onTapDown: widget.onTapDown,
-                onScaleEnd: widget.onScaleEnd,
-                outerSize: computedOuterSize,
-                gestureDetectorBehavior: widget.gestureDetectorBehavior,
-                tightMode: widget.tightMode,
-                filterQuality: widget.filterQuality,
-                disableGestures: widget.disableGestures,
-                enablePanAlways: widget.enablePanAlways,
-                strictScale: widget.strictScale,
-              )
+          child: widget.child,
+          childWrapper: widget.childWrapper,
+          childSize: widget.childSize,
+          heroAttributes: widget.heroAttributes,
+          scaleStateChangedCallback: widget.scaleStateChangedCallback,
+          enableRotation: widget.enableRotation,
+          controller: _controller,
+          scaleStateController: _scaleStateController,
+          maxScale: widget.maxScale,
+          minScale: widget.minScale,
+          initialScale: widget.initialScale,
+          basePosition: widget.basePosition,
+          scaleStateCycle: widget.scaleStateCycle,
+          onTapUp: widget.onTapUp,
+          onTapDown: widget.onTapDown,
+          onScaleEnd: widget.onScaleEnd,
+          outerSize: computedOuterSize,
+          gestureDetectorBehavior: widget.gestureDetectorBehavior,
+          tightMode: widget.tightMode,
+          filterQuality: widget.filterQuality,
+          disableGestures: widget.disableGestures,
+          enablePanAlways: widget.enablePanAlways,
+          strictScale: widget.strictScale,
+        )
             : ImageWrapper(
-                imageProvider: widget.imageProvider!,
-                loadingBuilder: widget.loadingBuilder,
-                backgroundDecoration: backgroundDecoration,
-                semanticLabel: widget.semanticLabel,
-                gaplessPlayback: widget.gaplessPlayback,
-                heroAttributes: widget.heroAttributes,
-                scaleStateChangedCallback: widget.scaleStateChangedCallback,
-                enableRotation: widget.enableRotation,
-                controller: _controller,
-                scaleStateController: _scaleStateController,
-                maxScale: widget.maxScale,
-                minScale: widget.minScale,
-                initialScale: widget.initialScale,
-                basePosition: widget.basePosition,
-                scaleStateCycle: widget.scaleStateCycle,
-                onTapUp: widget.onTapUp,
-                onTapDown: widget.onTapDown,
-                onScaleEnd: widget.onScaleEnd,
-                outerSize: computedOuterSize,
-                gestureDetectorBehavior: widget.gestureDetectorBehavior,
-                tightMode: widget.tightMode,
-                filterQuality: widget.filterQuality,
-                disableGestures: widget.disableGestures,
-                errorBuilder: widget.errorBuilder,
-                enablePanAlways: widget.enablePanAlways,
-                strictScale: widget.strictScale,
-              );
+          imageProvider: widget.imageProvider!,
+          loadingBuilder: widget.loadingBuilder,
+          semanticLabel: widget.semanticLabel,
+          gaplessPlayback: widget.gaplessPlayback,
+          heroAttributes: widget.heroAttributes,
+          scaleStateChangedCallback: widget.scaleStateChangedCallback,
+          enableRotation: widget.enableRotation,
+          controller: _controller,
+          scaleStateController: _scaleStateController,
+          maxScale: widget.maxScale,
+          minScale: widget.minScale,
+          initialScale: widget.initialScale,
+          basePosition: widget.basePosition,
+          scaleStateCycle: widget.scaleStateCycle,
+          onTapUp: widget.onTapUp,
+          onTapDown: widget.onTapDown,
+          onScaleEnd: widget.onScaleEnd,
+          outerSize: computedOuterSize,
+          gestureDetectorBehavior: widget.gestureDetectorBehavior,
+          tightMode: widget.tightMode,
+          filterQuality: widget.filterQuality,
+          disableGestures: widget.disableGestures,
+          errorBuilder: widget.errorBuilder,
+          enablePanAlways: widget.enablePanAlways,
+          strictScale: widget.strictScale,
+        );
       },
     );
   }
@@ -594,32 +591,32 @@ PhotoViewScaleState defaultScaleStateCycle(PhotoViewScaleState actual) {
 /// It is used internally to walk in the "doubletap gesture cycle".
 /// It is passed to [PhotoView.scaleStateCycle]
 typedef ScaleStateCycle = PhotoViewScaleState Function(
-  PhotoViewScaleState actual,
-);
+    PhotoViewScaleState actual,
+    );
 
 /// A type definition for a callback when the user taps up the photoview region
 typedef PhotoViewImageTapUpCallback = Function(
-  BuildContext context,
-  TapUpDetails details,
-  PhotoViewControllerValue controllerValue,
-);
+    BuildContext context,
+    TapUpDetails details,
+    PhotoViewControllerValue controllerValue,
+    );
 
 /// A type definition for a callback when the user taps down the photoview region
 typedef PhotoViewImageTapDownCallback = Function(
-  BuildContext context,
-  TapDownDetails details,
-  PhotoViewControllerValue controllerValue,
-);
+    BuildContext context,
+    TapDownDetails details,
+    PhotoViewControllerValue controllerValue,
+    );
 
 /// A type definition for a callback when a user finished scale
 typedef PhotoViewImageScaleEndCallback = Function(
-  BuildContext context,
-  ScaleEndDetails details,
-  PhotoViewControllerValue controllerValue,
-);
+    BuildContext context,
+    ScaleEndDetails details,
+    PhotoViewControllerValue controllerValue,
+    );
 
 /// A type definition for a callback to show a widget while the image is loading, a [ImageChunkEvent] is passed to inform progress
 typedef LoadingBuilder = Widget Function(
-  BuildContext context,
-  ImageChunkEvent? event,
-);
+    BuildContext context,
+    ImageChunkEvent? event,
+    );

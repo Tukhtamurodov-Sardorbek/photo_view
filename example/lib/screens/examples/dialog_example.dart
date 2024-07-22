@@ -9,57 +9,54 @@ class DialogExample extends StatefulWidget {
 
 class _DialogExampleState extends State<DialogExample> {
   void openDialog(BuildContext context) => showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              child: PhotoView(
-                tightMode: true,
-                imageProvider: const AssetImage("assets/large-image.jpg"),
-                heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
-              ),
-            ),
-          );
-        },
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Container(
+          child: PhotoView(
+            tightMode: true,
+            imageProvider: const AssetImage("assets/large-image.jpg"),
+            heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+          ),
+        ),
       );
+    },
+  );
 
   void openBottomSheet(BuildContext context) => showBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        shape: const ContinuousRectangleBorder(),
-        builder: (BuildContext context) {
-          return PhotoViewGestureDetectorScope(
+    context: context,
+    backgroundColor: Colors.transparent,
+    shape: const ContinuousRectangleBorder(),
+    builder: (BuildContext context) {
+      return PhotoViewGestureDetectorScope(
+        axis: Axis.vertical,
+        child: PhotoView(
+          imageProvider: const AssetImage("assets/large-image.jpg"),
+          heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+        ),
+      );
+    },
+  );
+
+  void openBottomSheetModal(BuildContext context) => showModalBottomSheet(
+    context: context,
+    shape: const ContinuousRectangleBorder(),
+    builder: (BuildContext context) {
+      return SafeArea(
+        child: Container(
+          height: 250,
+          child: PhotoViewGestureDetectorScope(
             axis: Axis.vertical,
             child: PhotoView(
-              backgroundDecoration: BoxDecoration(
-                color: Colors.black.withAlpha(240),
-              ),
+              tightMode: true,
               imageProvider: const AssetImage("assets/large-image.jpg"),
               heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
             ),
-          );
-        },
+          ),
+        ),
       );
-
-  void openBottomSheetModal(BuildContext context) => showModalBottomSheet(
-        context: context,
-        shape: const ContinuousRectangleBorder(),
-        builder: (BuildContext context) {
-          return SafeArea(
-            child: Container(
-              height: 250,
-              child: PhotoViewGestureDetectorScope(
-                axis: Axis.vertical,
-                child: PhotoView(
-                  tightMode: true,
-                  imageProvider: const AssetImage("assets/large-image.jpg"),
-                  heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
-                ),
-              ),
-            ),
-          );
-        },
-      );
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
