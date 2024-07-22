@@ -6,7 +6,7 @@ import 'utils/photo_view_utils.dart';
 class CustomChildWrapper extends StatelessWidget {
   const CustomChildWrapper({
     Key? key,
-    this.child,
+    required this.child,
     this.childWrapper,
     required this.childSize,
     this.heroAttributes,
@@ -31,7 +31,7 @@ class CustomChildWrapper extends StatelessWidget {
     required this.strictScale,
   }) : super(key: key);
 
-  final Widget? child;
+  final Widget child;
   final Size? childSize;
   final MapEntry<Widget Function(BuildContext, int, Widget), int>? childWrapper;
   final PhotoViewHeroAttributes? heroAttributes;
@@ -68,7 +68,7 @@ class CustomChildWrapper extends StatelessWidget {
       childSize ?? outerSize,
     );
 
-    return PhotoViewCore.customChild(
+    return PhotoViewCore(
       customChild: child,
       childWrapper: childWrapper,
       enableRotation: enableRotation,

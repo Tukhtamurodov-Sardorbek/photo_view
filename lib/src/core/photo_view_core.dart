@@ -20,31 +20,6 @@ import 'package:photo_view/src/utils/photo_view_utils.dart';
 class PhotoViewCore extends StatefulWidget {
   const PhotoViewCore({
     Key? key,
-    required this.imageProvider,
-    required this.semanticLabel,
-    required this.gaplessPlayback,
-    required this.heroAttributes,
-    required this.enableRotation,
-    required this.onTapUp,
-    required this.onTapDown,
-    required this.onScaleEnd,
-    required this.gestureDetectorBehavior,
-    required this.controller,
-    required this.scaleBoundaries,
-    required this.scaleStateCycle,
-    required this.scaleStateController,
-    required this.basePosition,
-    required this.tightMode,
-    required this.filterQuality,
-    required this.disableGestures,
-    required this.enablePanAlways,
-    required this.strictScale,
-  })  : customChild = null,
-        childWrapper = null,
-        super(key: key);
-
-  const PhotoViewCore.customChild({
-    Key? key,
     required this.customChild,
     this.childWrapper,
     this.heroAttributes,
@@ -63,17 +38,11 @@ class PhotoViewCore extends StatefulWidget {
     required this.disableGestures,
     required this.enablePanAlways,
     required this.strictScale,
-  })  : imageProvider = null,
-        semanticLabel = null,
-        gaplessPlayback = false,
-        super(key: key);
+  }) : super(key: key);
 
-  final ImageProvider? imageProvider;
-  final String? semanticLabel;
-  final bool? gaplessPlayback;
   final PhotoViewHeroAttributes? heroAttributes;
   final bool enableRotation;
-  final Widget? customChild;
+  final Widget customChild;
   final MapEntry<PhotoViewGalleryWrapperBuilder, int>? childWrapper;
 
   final PhotoViewControllerBase controller;
@@ -98,8 +67,6 @@ class PhotoViewCore extends StatefulWidget {
   State<StatefulWidget> createState() {
     return PhotoViewCoreState();
   }
-
-  bool get hasCustomChild => customChild != null;
 }
 
 class PhotoViewCoreState extends State<PhotoViewCore>
@@ -377,29 +344,20 @@ class PhotoViewCoreState extends State<PhotoViewCore>
   }
 
   Widget _buildHero() {
-    return heroAttributes != null
-        ? Hero(
-            tag: heroAttributes!.tag,
-            createRectTween: heroAttributes!.createRectTween,
-            flightShuttleBuilder: heroAttributes!.flightShuttleBuilder,
-            placeholderBuilder: heroAttributes!.placeholderBuilder,
-            transitionOnUserGestures: heroAttributes!.transitionOnUserGestures,
-            child: _buildChild(),
-          )
-        : _buildChild();
-  }
-
-  Widget _buildChild() {
-    return widget.hasCustomChild
-        ? widget.customChild!
-        : Image(
-            image: widget.imageProvider!,
-            semanticLabel: widget.semanticLabel,
-            gaplessPlayback: widget.gaplessPlayback ?? false,
-            filterQuality: widget.filterQuality,
-            width: scaleBoundaries.childSize.width * scale,
-            fit: BoxFit.contain,
-          );
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      child: heroAttributes != null
+          ? Hero(
+              tag: heroAttributes!.tag,
+              createRectTween: heroAttributes!.createRectTween,
+              flightShuttleBuilder: heroAttributes!.flightShuttleBuilder,
+              placeholderBuilder: heroAttributes!.placeholderBuilder,
+              transitionOnUserGestures:
+                  heroAttributes!.transitionOnUserGestures,
+              child: widget.customChild,
+            )
+          : widget.customChild,
+    );
   }
 }
 
