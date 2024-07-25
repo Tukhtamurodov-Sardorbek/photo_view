@@ -47,6 +47,7 @@ class PhotoViewGallery extends StatefulWidget {
     this.scrollPhysics,
     this.scrollDirection = Axis.horizontal,
     this.customSize,
+    this.backgroundDecoration,
     this.allowImplicitScrolling = false,
     this.pageSnapping = true,
   })  : itemCount = null,
@@ -70,6 +71,7 @@ class PhotoViewGallery extends StatefulWidget {
     this.scrollPhysics,
     this.scrollDirection = Axis.horizontal,
     this.customSize,
+    this.backgroundDecoration,
     this.allowImplicitScrolling = false,
     this.pageSnapping = true,
   })  : pageOptions = null,
@@ -121,6 +123,8 @@ class PhotoViewGallery extends StatefulWidget {
 
   final bool pageSnapping;
 
+  final Decoration? backgroundDecoration;
+
   bool get _isBuilder => builder != null;
 
   @override
@@ -155,16 +159,19 @@ class _PhotoViewGalleryState extends State<PhotoViewGallery> {
     // Enable corner hit test
     return PhotoViewGestureDetectorScope(
       axis: widget.scrollDirection,
-      child: PageView.builder(
-        reverse: widget.reverse,
-        controller: _controller,
-        onPageChanged: widget.onPageChanged,
-        itemCount: itemCount,
-        itemBuilder: _buildItem,
-        scrollDirection: widget.scrollDirection,
-        physics: widget.scrollPhysics,
-        allowImplicitScrolling: widget.allowImplicitScrolling,
-        pageSnapping: widget.pageSnapping,
+      child: DecoratedBox(
+        decoration: widget.backgroundDecoration ?? const BoxDecoration(),
+        child: PageView.builder(
+          reverse: widget.reverse,
+          controller: _controller,
+          onPageChanged: widget.onPageChanged,
+          itemCount: itemCount,
+          itemBuilder: _buildItem,
+          scrollDirection: widget.scrollDirection,
+          physics: widget.scrollPhysics,
+          allowImplicitScrolling: widget.allowImplicitScrolling,
+          pageSnapping: widget.pageSnapping,
+        ),
       ),
     );
   }
